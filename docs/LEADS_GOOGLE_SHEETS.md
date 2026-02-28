@@ -83,12 +83,14 @@ function createResponse(status, obj) {
 1. No projeto, copie `.env.local.example` para `.env.local` (se ainda não tiver).
 2. Em `.env.local`, adicione ou edite:
    ```env
-   NEXT_PUBLIC_LEADS_SHEET_URL=https://script.google.com/macros/s/SUA_ID_AQUI/exec
+   LEADS_SHEET_URL=https://script.google.com/macros/s/SUA_ID_AQUI/exec
    ```
 3. Reinicie o servidor de desenvolvimento (`npm run dev`). Novos cálculos com nome e WhatsApp preenchidos passarão a gerar uma linha na planilha.
 
 ## Observações
 
-- Se `NEXT_PUBLIC_LEADS_SHEET_URL` não estiver definido, o envio é omitido (a calculadora funciona normalmente).
+- Se `LEADS_SHEET_URL` não estiver definido, o envio é omitido (a calculadora funciona normalmente).
+- A variável **não** usa o prefixo `NEXT_PUBLIC_` — ela fica apenas no servidor (API Route), nunca exposta no navegador.
+- O envio ocorre via `POST /api/leads` (API Route do Next.js), que atua como proxy para o Google Apps Script. Isso evita erros de CORS que aconteceriam com chamadas diretas do navegador.
 - Falhas de rede no envio não são mostradas ao usuário e não impedem a exibição do resultado.
 - Os dados enviados são de lead comercial; informe na política de privacidade do site o uso para contato comercial.

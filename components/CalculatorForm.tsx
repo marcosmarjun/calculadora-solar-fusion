@@ -73,9 +73,10 @@ export function CalculatorForm() {
 
     setResult(calcResult);
 
-    const leadsSheetUrl = process.env.NEXT_PUBLIC_LEADS_SHEET_URL;
-    if (leadsSheetUrl) {
-      const payload = {
+    fetch("/api/leads", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
         dataHora: new Date().toISOString(),
         nome: form.nome.trim(),
         whatsapp: form.whatsapp.trim(),
@@ -92,17 +93,8 @@ export function CalculatorForm() {
         retornoMeses: calcResult.retornoMeses,
         financiamento60x: calcResult.financiamento60x,
         cartao18x: calcResult.cartao18x,
-      };
-      fetch(leadsSheetUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      }).catch(() => {
-        if (process.env.NODE_ENV === "development") {
-          console.warn("Falha ao enviar lead para a planilha.");
-        }
-      });
-    }
+      }),
+    }).catch(() => {});
   };
 
   const canSubmit =
